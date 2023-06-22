@@ -7,13 +7,15 @@ import { ALREADY_REGISTERED } from "./auth.constants";
 export class AuthController {
   constructor(
     private readonly authService: AuthService
+
   ) { }
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post("login")
-  async login(@Body() user: AuthDto){
-
+  async login(@Body() { login, password } : AuthDto){
+    const user = await this.authService.validateUser(login, password);
+    return this.authService.login(user.email);
   }
 
   @UsePipes(new ValidationPipe())
